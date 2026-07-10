@@ -6,11 +6,14 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install zip pdo pdo_mysql \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-RUN rm -f /etc/apache2/mods-enabled/mpm_event.load \
-    && rm -f /etc/apache2/mods-enabled/mpm_worker.load \
+RUN rm -f /etc/apache2/mods-available/mpm_event.conf \
+    && rm -f /etc/apache2/mods-available/mpm_event.load \
+    && rm -f /etc/apache2/mods-available/mpm_worker.conf \
+    && rm -f /etc/apache2/mods-available/mpm_worker.load \
     && rm -f /etc/apache2/mods-enabled/mpm_event.conf \
+    && rm -f /etc/apache2/mods-enabled/mpm_event.load \
     && rm -f /etc/apache2/mods-enabled/mpm_worker.conf \
-    && a2enmod mpm_prefork
+    && rm -f /etc/apache2/mods-enabled/mpm_worker.load
 RUN a2enmod rewrite
 ENV PORT=80
 RUN sed -i 's/80/${PORT}/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
