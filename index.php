@@ -15,6 +15,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use App\Database;
 use App\AuthController;
 use App\TaskController;
+use App\ActivityController;
 use App\SchedulioController;
 use App\AuthMiddleware;
 use Dotenv\Dotenv;
@@ -77,6 +78,44 @@ elseif (preg_match('/^\/api\/tasks\/(\d+)$/', $uri, $matches) && $method === 'DE
     
     $taskController = new TaskController($db);
     $response = $taskController->deleteTask($userData->id, $taskId);
+    
+    http_response_code($response['status']);
+    echo json_encode($response);
+}
+elseif ($uri === '/api/activities' && $method === 'GET') {
+    $userData = AuthMiddleware::checkToken();
+    
+    $activityController = new ActivityController($db);
+    $response = $activityController->getActivities($userData->id);
+    
+    http_response_code($response['status']);
+    echo json_encode($response);
+}
+elseif ($uri === '/api/activities' && $method === 'POST') {
+    $userData = AuthMiddleware::checkToken();
+    
+    $activityController = new ActivityController($db);
+    $response = $activityController->createActivity($userData->id, $requestData);
+    
+    http_response_code($response['status']);
+    echo json_encode($response);
+}
+elseif (preg_match('/^\/api\/activities\/(\d+)$/', $uri, $matches) && $method === 'PUT') {
+    $userData = AuthMiddleware::checkToken();
+    $activityId = $matches[1];
+    
+    $activityController = new ActivityController($db);
+    $response = $activityController->updateActivity($userData->id, $activityId, $requestData);
+    
+    http_response_code($response['status']);
+    echo json_encode($response);
+}
+elseif (preg_match('/^\/api\/activities\/(\d+)$/', $uri, $matches) && $method === 'DELETE') {
+    $userData = AuthMiddleware::checkToken();
+    $activityId = $matches[1];
+    
+    $activityController = new ActivityController($db);
+    $response = $activityController->deleteActivity($userData->id, $activityId);
     
     http_response_code($response['status']);
     echo json_encode($response);
