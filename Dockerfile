@@ -13,4 +13,5 @@ RUN COMPOSER_ALLOW_SUPERUSER=1 composer install \
     --no-dev \
     --optimize-autoloader \
     --no-interaction
+EXPOSE 8080
 CMD php -S 0.0.0.0:${PORT:-8000} index.php
