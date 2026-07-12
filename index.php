@@ -16,6 +16,7 @@ use App\Database;
 use App\AuthController;
 use App\TaskController;
 use App\ActivityController;
+use App\CourseController;
 use App\SchedulioController;
 use App\AuthMiddleware;
 use Dotenv\Dotenv;
@@ -116,6 +117,44 @@ elseif (preg_match('/^\/api\/activities\/(\d+)$/', $uri, $matches) && $method ==
     
     $activityController = new ActivityController($db);
     $response = $activityController->deleteActivity($userData->id, $activityId);
+    
+    http_response_code($response['status']);
+    echo json_encode($response);
+}
+elseif ($uri === '/api/courses' && $method === 'GET') {
+    $userData = AuthMiddleware::checkToken();
+    
+    $courseController = new CourseController($db);
+    $response = $courseController->getCourses($userData->id);
+    
+    http_response_code($response['status']);
+    echo json_encode($response);
+}
+elseif ($uri === '/api/courses' && $method === 'POST') {
+    $userData = AuthMiddleware::checkToken();
+    
+    $courseController = new CourseController($db);
+    $response = $courseController->createCourse($userData->id, $requestData);
+    
+    http_response_code($response['status']);
+    echo json_encode($response);
+}
+elseif (preg_match('/^\/api\/courses\/(\d+)$/', $uri, $matches) && $method === 'PUT') {
+    $userData = AuthMiddleware::checkToken();
+    $courseId = $matches[1];
+    
+    $courseController = new CourseController($db);
+    $response = $courseController->updateCourse($userData->id, $courseId, $requestData);
+    
+    http_response_code($response['status']);
+    echo json_encode($response);
+}
+elseif (preg_match('/^\/api\/courses\/(\d+)$/', $uri, $matches) && $method === 'DELETE') {
+    $userData = AuthMiddleware::checkToken();
+    $courseId = $matches[1];
+    
+    $courseController = new CourseController($db);
+    $response = $courseController->deleteCourse($userData->id, $courseId);
     
     http_response_code($response['status']);
     echo json_encode($response);
