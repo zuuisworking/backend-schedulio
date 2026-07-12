@@ -101,10 +101,10 @@ class SchedulioService {
     }
 
     private function saveResultsToDb($userId, $targetType, $results) {
-        $deleteQuery = "DELETE FROM topsis_results WHERE user_id = :user_id AND target_type = :target_type";
+        $deleteQuery = "DELETE FROM schedulio_results WHERE user_id = :user_id AND target_type = :target_type";
         $delStmt = $this->db->prepare($deleteQuery);
         $delStmt->execute([':user_id' => $userId, ':target_type' => $targetType]);
-        $insertQuery = "INSERT INTO topsis_results (user_id, target_type, target_id, score, ranking) 
+        $insertQuery = "INSERT INTO schedulio_results (user_id, target_type, target_id, score, ranking) 
                         VALUES (:user_id, :target_type, :target_id, :score, :ranking)";
         $insStmt = $this->db->prepare($insertQuery);
 
