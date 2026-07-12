@@ -17,6 +17,7 @@ use App\AuthController;
 use App\TaskController;
 use App\ActivityController;
 use App\CourseController;
+use App\DashboardController;
 use App\SchedulioController;
 use App\AuthMiddleware;
 use Dotenv\Dotenv;
@@ -117,6 +118,15 @@ elseif (preg_match('/^\/api\/activities\/(\d+)$/', $uri, $matches) && $method ==
     
     $activityController = new ActivityController($db);
     $response = $activityController->deleteActivity($userData->id, $activityId);
+    
+    http_response_code($response['status']);
+    echo json_encode($response);
+}
+elseif ($uri === '/api/dashboard/nearest' && $method === 'GET') {
+    $userData = AuthMiddleware::checkToken();
+    
+    $dashboardController = new DashboardController($db);
+    $response = $dashboardController->getNearestSchedules($userData->id);
     
     http_response_code($response['status']);
     echo json_encode($response);
