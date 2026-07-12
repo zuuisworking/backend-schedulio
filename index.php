@@ -93,6 +93,15 @@ elseif ($uri === '/api/activities' && $method === 'GET') {
     http_response_code($response['status']);
     echo json_encode($response);
 }
+elseif ($uri === '/api/schedules' && $method === 'GET') {
+    $userData = AuthMiddleware::checkToken();
+    
+    $activityController = new ActivityController($db);
+    $response = $activityController->getActivities($userData->id);
+    
+    http_response_code($response['status']);
+    echo json_encode($response);
+}
 elseif ($uri === '/api/activities' && $method === 'POST') {
     $userData = AuthMiddleware::checkToken();
     
